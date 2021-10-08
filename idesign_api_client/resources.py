@@ -59,7 +59,9 @@ class DeletableResource:
 
 # Login
 class LoginAccessTokenPool(ResourcePool, CreatableResource):
-    pass
+    def create_item(self, item):
+        res = self._session.post(self._endpoint, data=item)
+        return res
 
 class LoginPool(ResourcePool):
     

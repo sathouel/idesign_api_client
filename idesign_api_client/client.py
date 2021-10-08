@@ -6,7 +6,7 @@ from idesign_api_client import (
 )
 from idesign_api_client.config import settings
 
-class MirakleClient:
+class IdesignClient:
     def __init__(self, username, password, token=None, api_version='v1', sandbox=False):
         self._session = rq.Session()
 
@@ -20,13 +20,13 @@ class MirakleClient:
         )
 
         self._resources = {
-            'login': resources.InvoicesPool(
+            'login': resources.LoginPool(
                 utils.urljoin(self._base_url, 'login'), self._session),
-            'user': resources.TransactionsLogsPool(
+            'user': resources.UserPool(
                 utils.urljoin(self._base_url, 'user'), self._session),
-            'orders': resources.ThreadsPool(
+            'orders': resources.OrdersPool(
                 utils.urljoin(self._base_url, 'orders'), self._session),
-            'products': resources.ShipmentsPool(
+            'products': resources.ProductsPool(
                 utils.urljoin(self._base_url, 'products'), self._session),
         }        
 
@@ -44,11 +44,9 @@ class MirakleClient:
             token = res.json()['access_token']
         
         headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
             'Authorization': 'Bearer {}'.format(token)
         }
-        self._session.headers = headers
+        self._session.headers.update(headers)
 
     @property
     def resources(self):
