@@ -12,47 +12,39 @@ class ResourcePool:
         return self._endpoint
 
 class CreatableResource:
-    def create_item(self, item, files=None):
+    def create_item(self, item, files=None, params=None):
         if files:
             self._session.headers.pop('Content-Type')
             self._session.headers.pop('Accept')
             print(self._session.headers)
-            res = self._session.post(self._endpoint, files=files, data=item)
+            res = self._session.post(self._endpoint, files=files, data=item, params=params)
         else:
-            res = self._session.post(self._endpoint, data=json.dumps(item))
+            res = self._session.post(self._endpoint, data=json.dumps(item), params=params)
         return res
 
 class GettableResource:
-    def fetch_item(self, code):
+    def fetch_item(self, code, params=None):
         url = urljoin(self._endpoint, code)
-        res = self._session.get(url)
+        res = self._session.get(url, params=params)
         return res
 
 class ListableResource:
-    def fetch_list(self, args=None):
-        res = self._session.get(self._endpoint, params=args)
-        return res
-
-class SearchableResource:
-    def search(self, query):
-        params = {
-            'query': query
-        }
+    def fetch_list(self, params=None):
         res = self._session.get(self._endpoint, params=params)
         return res
 
 class UpdatableResource:
-    def update_create_item(self, item, code=None):
+    def update_create_item(self, item, code=None, params=None):
         if code is None:
             code = item.get('id')
         url = urljoin(self._endpoint, code)
-        res = self._session.put(url, data=json.dumps(item))
+        res = self._session.put(url, data=json.dumps(item), params=params)
         return res
 
 class DeletableResource:
-    def delete_item(self, code):
+    def delete_item(self, code, params=None):
         url = urljoin(self._endpoint, code)
-        res = self._session.delete(url)
+        res = self._session.delete(url, params=params)
         return res
 
 # Pools
